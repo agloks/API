@@ -27,11 +27,8 @@ Amber::Server.configure do
     plug Amber::Pipe::Static.new("./public")
   end
 
-  routes :web do
-    get "/", HomeController, :index
-  end
-
   routes :api do
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   routes :static do
