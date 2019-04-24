@@ -17,7 +17,7 @@ Amber::Server.configure do
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
     plug Amber::Pipe::Session.new
-    plug Amber::Pipe::CORS.new
+    # plug Amber::Pipe::CORS.new
   end
 
   # All static content will run these transformations
