@@ -6,7 +6,6 @@ class UserController < ApplicationController
   end
 
   def index
-    pp "hello"
     users = User.all
     respond_with do
       json users.to_json
@@ -25,13 +24,15 @@ class UserController < ApplicationController
 
     if m_user.just?
       user = m_user.value!
-      result = user.save ? user.to_json : {error: "NOPE"}.to_json
-    else
-      result = {error: "NOPE"}.to_json
+      if user.save
+        return respond_with(201) do
+          json user.to_json
+        end
+      end
     end
 
-    respond_with do
-      json result
+    respond_with(403) do
+      json({error: "NOPE"}.to_json)
     end
   end
 
@@ -45,8 +46,8 @@ class UserController < ApplicationController
 
   def destroy
     user.destroy
-    respond_with do
-      json "[]"
+    respond_with(204) do
+      json ""
     end
   end
 
@@ -54,7 +55,7 @@ class UserController < ApplicationController
     params.validation do
       required :password { |p| p.size >= 8 }
       required :password_confirmation
-      required :email
+      required :email { |p| p.email? }
       required :nickname
     end
   end

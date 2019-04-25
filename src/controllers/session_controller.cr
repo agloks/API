@@ -9,12 +9,12 @@ class SessionController < ApplicationController
           json({ "token": Auth::JWTService.new.encode({ user_id: user.id }) }.to_json)
         end
       else
-        respond_with do
+        respond_with(403) do
           json({ "error": "wrong password" }.to_json)
         end
       end
     else
-      respond_with do
+      respond_with(403) do
         json({ "error": "email doesn't exist" }.to_json)
       end
     end
@@ -22,7 +22,7 @@ class SessionController < ApplicationController
 
   def delete
     session.delete(:current_user_id)
-    respond_with do
+    respond_with(204) do
       json({ "success": "sucessfully signed out" }.to_json)
     end
   end
