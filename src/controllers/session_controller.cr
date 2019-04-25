@@ -23,7 +23,7 @@ class SessionController < ApplicationController
   def delete
     session.delete(:current_user_id)
     respond_with(204) do
-      json({ "success": "sucessfully signed out" }.to_json)
+      json ""
     end
   end
 

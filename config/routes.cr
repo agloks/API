@@ -25,7 +25,7 @@ Amber::Server.configure do
 
   routes :api do
     resources "/users", UserController, except: [:create, :new, :edit]
-    post "/auth/sign_out", SessionController, :delete
+    delete "/auth/sign_out", SessionController, :delete
   end
 
   routes :public_api do
