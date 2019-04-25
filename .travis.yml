@@ -1,1 +1,6 @@
 language: crystal
+
+before_install:
+  - shards install
+
+script: AMBER_ENV=test crystal spec
