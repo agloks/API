@@ -24,15 +24,19 @@ class UserController < ApplicationController
 
     if m_user.just?
       user = m_user.value!
-      if user.save
+      if user.save!
         return respond_with(201) do
           json user.to_json
         end
+      else
+        error = "invalid parameters"
       end
+    else
+      error = "Passwords don't match"
     end
 
     respond_with(403) do
-      json({error: "NOPE"}.to_json)
+      json({error: error}.to_json)
     end
   end
 
