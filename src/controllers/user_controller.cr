@@ -20,8 +20,16 @@ class UserController < ApplicationController
   end
 
   def create
-    user = User.new user_params.validate!
-    result = user.save ? user.to_json : {error: "NOPE"}.to_json
+    factory = Auth::UserFactory.new
+    m_user = factory.build(user_params.validate!)
+
+    if m_user.just?
+      user = m_user.value!
+      result = user.save ? user.to_json : {error: "NOPE"}.to_json
+    else
+      result = {error: "NOPE"}.to_json
+    end
+
     respond_with do
       json result
     end
@@ -44,7 +52,8 @@ class UserController < ApplicationController
 
   private def user_params
     params.validation do
-      required :password
+      required :password { |p| p.size >= 8 }
+      required :password_confirmation
       required :email
       required :nickname
     end
