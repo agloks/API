@@ -46,7 +46,7 @@ dependencies:
 
   monads:
     github: alex-lairan/monads
-    branch: fix/value_missing
+    commit: 519bcfe2a8d50f3d65aa1597d5387e2b5577a103
 
 development_dependencies:
   garnet_spec:
