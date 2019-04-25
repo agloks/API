@@ -4,6 +4,8 @@ require "./initializers/**"
 
 require "amber"
 require "../src/models/**"
+require "../src/pipes/**"
+require "../src/services/**"
 
 require "../src/controllers/application_controller"
 require "../src/controllers/**"

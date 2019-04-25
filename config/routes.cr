@@ -1,18 +1,14 @@
 Amber::Server.configure do
-  pipeline :web do
-    # Plug is the method to use connect a pipe (middleware)
-    # A plug accepts an instance of HTTP::Handler
+  pipeline :api do
     plug Amber::Pipe::PoweredByAmber.new
-    # plug Amber::Pipe::ClientIp.new(["X-Forwarded-For"])
-    plug Citrine::I18n::Handler.new
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
     plug Amber::Pipe::Session.new
-    plug Amber::Pipe::Flash.new
-    plug Amber::Pipe::CSRF.new
+    plug Pipes::Auth.new
+    # plug Amber::Pipe::CORS.new
   end
 
-  pipeline :api do
+  pipeline :public_api do
     plug Amber::Pipe::PoweredByAmber.new
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
@@ -28,7 +24,13 @@ Amber::Server.configure do
   end
 
   routes :api do
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, except: [:create, :new, :edit]
+    post "/auth/sign_out", SessionController, :delete
+  end
+
+  routes :public_api do
+    post "/auth/sign_up", UserController, :create
+    post "/auth/sign_in", SessionController, :create
   end
 
   routes :static do
