@@ -37,9 +37,16 @@ dependencies:
     github: will/crystal-pg
     version: ~> 0.15.0
 
+  jwt:
+    github: crystal-community/jwt
+
   citrine-i18n:
     github: amberframework/citrine-i18n
     version: 0.3.2
+
+  monads:
+    github: alex-lairan/monads
+    branch: master
 
 development_dependencies:
   garnet_spec:

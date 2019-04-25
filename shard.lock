@@ -56,6 +56,10 @@ shards:
     github: amberframework/jasper-helpers
     version: 0.2.4
 
+  jwt:
+    github: crystal-community/jwt
+    version: 0.4.0
+
   kilt:
     github: jeromegn/kilt
     version: 0.4.0
@@ -67,6 +71,10 @@ shards:
   micrate:
     github: amberframework/micrate
     version: 0.3.3
+
+  monads:
+    github: alex-lairan/monads
+    commit: e1349e7bb4cb7f45b8c2b98abcd77b16ab3b3dee
 
   mysql:
     github: crystal-lang/crystal-mysql
