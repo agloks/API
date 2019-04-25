@@ -2,7 +2,7 @@
 CREATE TABLE users (
   id BIGSERIAL PRIMARY KEY,
   password VARCHAR,
-  email VARCHAR,
+  email VARCHAR UNIQUE,
   nickname VARCHAR,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
