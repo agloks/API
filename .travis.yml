@@ -1,6 +1,10 @@
 language: crystal
 
 before_install:
+  - sudo apt install libreadline-dev libsqlite3-dev libpq-dev libmysqlclient-dev libssl-dev libyaml-dev -y
+  - curl -L https://github.com/amberframework/amber/archive/stable.tar.gz | tar xz
+  - cd amber-stable/
   - shards install
+  - make install
 
 script: AMBER_ENV=test crystal spec
