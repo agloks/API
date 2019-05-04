@@ -4,7 +4,7 @@ version: 0.1.0
 authors:
   - Amelie Certin <amelie.certin@gmail.com>
 
-crystal: 0.27.2
+crystal: 0.28.0
 
 license: UNLICENSED
 
@@ -18,8 +18,7 @@ targets:
 dependencies:
   amber:
     github: amberframework/amber
-    version: 0.11.3
-    #branch: master
+    version: 0.28.0
 
   granite:
     github: amberframework/granite
@@ -35,7 +34,7 @@ dependencies:
 
   pg:
     github: will/crystal-pg
-    version: ~> 0.15.0
+    version: ~> 0.16.1
 
   jwt:
     github: crystal-community/jwt
