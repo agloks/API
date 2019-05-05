@@ -74,7 +74,7 @@ shards:
 
   monads:
     github: alex-lairan/monads
-    commit: 519bcfe2a8d50f3d65aa1597d5387e2b5577a103
+    commit: 6f195148e649702884c265987cfb7a314077949d
 
   mysql:
     github: crystal-lang/crystal-mysql
