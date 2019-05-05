@@ -7,7 +7,7 @@ logging:
   colorize: true
   filter:
     - password
-    - confirm_password
+    - password_confirmation
   context:
     - request
     - session
@@ -21,8 +21,12 @@ process_count: 1
 # ssl_key_file:
 # ssl_cert_file:
 redis_url: "redis://localhost:6379"
-database_url: postgres://postgres:@localhost:5432/blind_test_api_development
 auto_reload: true
+
+# Classic config
+database_url: postgres://postgres:@localhost:5432/blind_test_api_development
+# Docker config
+# database_url: postgres://admin:password@db:5432/blind_test_api_development
 
 session:
   key: amber.session
