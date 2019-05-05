@@ -36,6 +36,16 @@ services:
     volumes:
       - db:/var/lib/postgres/data
 
+  spec:
+    build: .
+    image: app
+    command: bash -c "crystal tool format --check && crystal spec"
+    volumes:
+      - .:/app
+      - shards:/app/lib
+    links:
+      - db
+
 volumes:
   db:
   nodes:

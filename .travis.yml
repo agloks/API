@@ -1,10 +1,11 @@
-language: crystal
+language: general
 
-before_install:
-  - sudo apt install libreadline-dev libsqlite3-dev libpq-dev libmysqlclient-dev libssl-dev libyaml-dev -y
-  - curl -L https://github.com/amberframework/amber/archive/stable.tar.gz | tar xz
-  - cd amber-stable/
-  - shards install
-  - make install
+services:
+  - docker
 
-script: AMBER_ENV=test crystal spec
+install:
+  - docker-compose build
+
+script:
+  - docker-compose run migrate
+  - docker-compose run spec

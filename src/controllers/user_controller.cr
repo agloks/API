@@ -29,7 +29,7 @@ class UserController < ApplicationController
           json user.to_json
         end
       else
-        errors = user.errors.map { |error| { error.field => error.message }}
+        errors = user.errors.map { |error| {error.field => error.message} }
       end
     else
       errors = [{password: "Pawssords don't match"}]

@@ -15,7 +15,7 @@ module Pipes
 
     private def not_auth(context)
       context.response.status_code = 404
-      error = { error: "Please Sign In" }.to_json
+      error = {error: "Please Sign In"}.to_json
       context.response.print error
     end
   end
