@@ -7,7 +7,7 @@ logging:
   colorize: true
   filter:
     - password
-    - confirm_password
+    - password_confirmation
   context:
     - request
     - session
