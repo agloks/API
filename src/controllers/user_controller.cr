@@ -43,7 +43,7 @@ class UserController < ApplicationController
 
   private def user_params
     params.validation do
-      required :password { |p| p.size >= 8 }
+      required :password
       required :password_confirmation
       required :email { |p| p.email? }
       required :nickname
