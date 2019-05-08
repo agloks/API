@@ -14,7 +14,7 @@ class UserController < ApplicationController
 
   def show
     respond_with do
-      json @user.to_json
+      json user.to_json
     end
   end
 
