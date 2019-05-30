@@ -8,5 +8,5 @@ class Theme < Granite::Base
   timestamps
 
   belongs_to :user, foreign_key: user_id : Int32
-  has_many :medias
+  has_many medias : Media
 end

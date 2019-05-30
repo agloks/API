@@ -7,8 +7,7 @@ CREATE TABLE medias (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-ALTER TABLE medias
-ADD CONSTRAINT fk_theme_media FOREIGN KEY (theme_id) REFERENCES themes(id);
+CREATE INDEX media_theme_id_idx ON medias (theme_id); 
 
 
 -- +micrate Down

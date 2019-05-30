@@ -7,8 +7,7 @@ CREATE TABLE themes (
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
-ALTER TABLE themes
-ADD CONSTRAINT fk_user_theme FOREIGN KEY (user_id) REFERENCES users(id);
+CREATE INDEX theme_user_id_idx ON themes (user_id); 
 
 
 -- +micrate Down
