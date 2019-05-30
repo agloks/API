@@ -9,6 +9,12 @@ class Picture < Granite::Base
 
   belongs_to :theme, foreign_key: theme_id : Int32
 
+  def initialize(params : Hash(String, String | Nil))
+    self.title = params["title"]?
+    self.theme_id = params["theme_id"].to_i if params.has_key?("theme_id")
+    self.kind = "picture"
+  end
+
   def initialize(media : Media)
     self.id = media.id
     self.title = media.title

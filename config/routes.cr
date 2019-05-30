@@ -28,6 +28,7 @@ Amber::Server.configure do
     delete "/auth/sign_out", SessionController, :delete
 
     resources "/themes", ThemeController, except: [:new, :edit]
+    resources "/medias", MediaController, except: [:new, :edit]
   end
 
   routes :public_api do

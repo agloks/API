@@ -93,6 +93,7 @@ describe ThemeControllerTest do
       response = subject.delete "/themes/#{model.id}"
 
       response.status_code.should eq(204)
+      response.body.should eq("")
     end
   end
 end
