@@ -5,17 +5,22 @@ class Media < Granite::Base
   primary id : Int64
   field title : String
   field kind : String
+  field file_url : String
   timestamps
 
   belongs_to :theme, foreign_key: theme_id : Int32
 
-  SCOPE = {"picture" => Picture}
+  ALLOWED_KINDS = ["picture", "video", "music"]
 
   def self.pictures
-    Picture.where(kind: "picture")
+    Media.where(kind: "picture")
   end
 
-  def specific
-    SCOPE[kind].new(self)
+  def self.videos
+    Media.where(kind: "video")
+  end
+
+  def self.musics
+    Media.where(kind: "music")
   end
 end

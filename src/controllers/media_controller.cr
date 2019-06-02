@@ -19,7 +19,7 @@ class MediaController < ApplicationController
   end
 
   def create
-    Factory::Media.new(media_params.validate!)
+    Factory::Media.new(media_params.validate!, params.files["file"])
       .build
       .bind(save_media)
       .fmap(handle_success(201))
@@ -58,7 +58,7 @@ class MediaController < ApplicationController
   end
 
   private def save_media
-    ->(media : Picture) do
+    ->(media : Media) do
       if media.save
         Monads::Right.new(media)
       else
@@ -68,7 +68,7 @@ class MediaController < ApplicationController
   end
 
   private def handle_success(code)
-    ->(media : Picture) do
+    ->(media : Media) do
       respond_with(code) do
         json media.to_json
       end
