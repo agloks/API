@@ -3,16 +3,16 @@ require "awscr-s3"
 module BucketService
   class FileUploader
     FILE_PREFIX = {
-      "image/png" => "pictures",
+      "image/png"  => "pictures",
       "image/jpeg" => "pictures",
-      "video/mp4" => "videos",
+      "video/mp4"  => "videos",
       "video/mpeg" => "videos",
-      "audio/mpeg" => "musics"
+      "audio/mpeg" => "musics",
     }
 
     def initialize(@file : File, @filename : String, @metadata : Hash(String, String))
       @uploaded_at = ""
-      @client = Awscr::S3::Client.new("eu-west-1", ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"])
+      @client = Awscr::S3::Client.new(ENV["AWS_REGION"], ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"])
     end
 
     def upload
@@ -27,7 +27,7 @@ module BucketService
     end
 
     private def file_url
-      "https://#{ENV["AWS_BUCKET"]}.s3-#{"AWS_REGION"}.amazonaws.com/#{bucket_filename}"
+      "https://#{ENV["AWS_BUCKET"]}.s3-#{ENV["AWS_REGION"]}.amazonaws.com/#{bucket_filename}"
     end
 
     private def file_type
