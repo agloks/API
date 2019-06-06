@@ -6,6 +6,7 @@ module Factory
     end
 
     def build
+      return Monads::Left.new([{"theme" => "Unknown theme"}]) unless Theme.find(@params["theme_id"])
       unless ::Media::ALLOWED_KINDS.includes?(@params["kind"])
         return Monads::Left.new([{"kind" => "Unknown media kind"}])
       end

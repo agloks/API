@@ -15,10 +15,16 @@ def media_params
   params.join("&")
 end
 
-def create_picture
-  model = Media.new(media_hash)
-  model.save
-  model
+def create_theme
+  theme = Theme.new({"title" => "wqe", "description" => "ewewd"})
+  theme.save
+  theme
+end
+
+def create_picture(theme)
+  media = Media.new(media_hash.merge({"theme_id" => theme.id}))
+  media.save
+  media
 end
 
 class MediaControllerTest < GarnetSpec::Controller::Test
@@ -40,24 +46,28 @@ describe MediaControllerTest do
   describe "#index" do
     it "renders media index" do
       Media.clear
-      model = create_picture
-      response = subject.get "/medias"
+      Theme.clear
+      theme = create_theme
+      media = create_picture(theme)
+
+      response = subject.get "/themes/#{theme.id}/medias"
 
       response.status_code.should eq(200)
-      response.body.should contain([model].to_json)
+      response.body.should contain([media].to_json)
     end
   end
 
   describe "#show" do
     it "renders media show" do
       Media.clear
-      model = create_picture
-      location = "/medias/#{model.id}"
+      Theme.clear
+      theme = create_theme
+      media = create_picture(theme)
 
-      response = subject.get location
+      response = subject.get "/themes/#{theme.id}/medias/#{media.id}"
 
       response.status_code.should eq(200)
-      response.body.should contain(model.to_json)
+      response.body.should contain(media.to_json)
     end
   end
 
@@ -87,8 +97,11 @@ describe MediaControllerTest do
   describe "#delete" do
     it "deletes a media" do
       Media.clear
-      model = create_picture
-      response = subject.delete "/medias/#{model.id}"
+      Theme.clear
+      theme = create_theme
+      media = create_picture(theme)
+
+      response = subject.delete "/themes/#{theme.id}/medias/#{media.id}"
 
       response.status_code.should eq(204)
       response.body.should eq("")
