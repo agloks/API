@@ -12,8 +12,12 @@ module Factory
       filename = @file_params.filename || "file"
       headers = {"Content-Type" => @file_params.headers["Content-Type"]}
 
-      @params["file_url"], @params["kind"] = BucketService::FileUploader.new(file, filename, headers).upload
-      Monads::Right.new(::Media.new(@params))
+      either = BucketService::FileUploader.new(file, filename, headers).upload
+
+      either.bind(->(value : Tuple(String, String)) {
+        @params["file_url"], @params["kind"] = value[0], value[1]
+        Monads::Right.new(::Media.new(@params))
+      })
     end
   end
 end

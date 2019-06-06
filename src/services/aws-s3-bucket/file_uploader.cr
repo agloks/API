@@ -16,10 +16,12 @@ module BucketService
     end
 
     def upload
+      return Monads::Left.new([{"file" => "Unhandled type file"}]) unless file_type
+
       @uploaded_at = Time.now.to_s("%F-%k-%M-%S")
       @client.put_object(ENV["AWS_BUCKET"], bucket_filename, @file, @metadata)
 
-      {file_url, file_type}
+      Monads::Right.new({file_url, file_type.not_nil!})
     end
 
     private def bucket_filename
@@ -31,7 +33,7 @@ module BucketService
     end
 
     private def file_type
-      FILE_PREFIX[@metadata["Content-Type"]]
+      FILE_PREFIX[@metadata["Content-Type"]]?
     end
   end
 end
