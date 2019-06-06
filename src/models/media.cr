@@ -10,8 +10,6 @@ class Media < Granite::Base
 
   belongs_to :theme, foreign_key: theme_id : Int32
 
-  ALLOWED_KINDS = ["picture", "video", "music"]
-
   def self.pictures
     Media.where(kind: "picture")
   end

@@ -4,47 +4,29 @@
 
 This is a project written using [Amber](https://amberframework.org). Enjoy!
 
-## Getting Started
-
-These instructions will get a copy of this project running on your machine for development and testing purposes.
-
-Please see [deployment](https://docs.amberframework.org/amber/deployment) for notes on deploying the project in production.
-
 ## Prerequisites
 
-This project requires [Crystal](https://crystal-lang.org/) ([installation guide](https://crystal-lang.org/docs/installation/)).
+- crystal 0.28.0
+- amber
+- postgresql
 
-## Development
+## Getting Started
 
-To start your Amber server:
+- Clone this repository
+- Duplicate the `.env.sample` file to `.env` and ask the others devs for the env variables.
 
-1. Install dependencies with `shards install`
-2. Build executables with `shards build`
-3. Create and migrate your database with `bin/amber db create migrate`. Also see [creating the database](https://docs.amberframework.org/amber/guides/create-new-app#creating-the-database).
-4. Start Amber server with `bin/amber watch`
+A - Installing crystal
+- Install crystal 0.28.0 using `crenv`
+- [Intall amber](https://docs.amberframework.org/amber/getting-started)
+- Run `shards install` to install dependencies
+- Run `amber db create migrate` to setup the database
+- Run `amber w` to start the server
+- Run `crystal spec` to run the specs
+- Run `crystal tool format` to run the linter
 
-Now you can visit http://localhost:3000/ from your browser.
+B - Using Docker
+- Run `docker-compose build` to setup
+- Run `docker-compose up` to start the server
+- Run `docker-compose run specs` to run the specs
 
-Getting an error message you need help decoding? Check the [Amber troubleshooting guide](https://docs.amberframework.org/amber/troubleshooting), post a [tagged message on Stack Overflow](https://stackoverflow.com/questions/tagged/amber-framework), or visit [Amber on Gitter](https://gitter.im/amberframework/amber).
-
-Using Docker? Please check [Amber Docker guides](https://docs.amberframework.org/amber/guides/docker).
-
-## Tests
-
-To run the test suite:
-
-```
-crystal spec
-```
-
-## Contributing
-
-1. Fork it ( https://github.com/your-github-user/blind-test-api/fork )
-2. Create your feature branch ( `git checkout -b my-new-feature` )
-3. Commit your changes ( `git commit -am 'Add some feature'` )
-4. Push to the branch ( `git push origin my-new-feature` )
-5. Create a new Pull Request
-
-## Contributors
-
-- [your-github-user](https://github.com/your-github-user) Amelie Certin - creator, maintainer
+Now you can target http://localhost:3000/ with curl and postman.
