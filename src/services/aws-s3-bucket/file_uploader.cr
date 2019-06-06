@@ -3,11 +3,11 @@ require "awscr-s3"
 module BucketService
   class FileUploader
     FILE_PREFIX = {
-      "image/png"  => "pictures",
-      "image/jpeg" => "pictures",
-      "video/mp4"  => "videos",
-      "video/mpeg" => "videos",
-      "audio/mpeg" => "musics",
+      "image/png"  => "picture",
+      "image/jpeg" => "picture",
+      "video/mp4"  => "video",
+      "video/mpeg" => "video",
+      "audio/mpeg" => "music",
     }
 
     def initialize(@file : File, @filename : String, @metadata : Hash(String, String))
@@ -19,7 +19,7 @@ module BucketService
       @uploaded_at = Time.now.to_s("%F-%k-%M-%S")
       @client.put_object(ENV["AWS_BUCKET"], bucket_filename, @file, @metadata)
 
-      file_url
+      {file_url, file_type}
     end
 
     private def bucket_filename

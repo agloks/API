@@ -7,15 +7,12 @@ module Factory
 
     def build
       return Monads::Left.new([{"theme" => "Unknown theme"}]) unless Theme.find(@params["theme_id"])
-      unless ::Media::ALLOWED_KINDS.includes?(@params["kind"])
-        return Monads::Left.new([{"kind" => "Unknown media kind"}])
-      end
 
       file = @file_params.file
       filename = @file_params.filename || "file"
       headers = {"Content-Type" => @file_params.headers["Content-Type"]}
 
-      @params["file_url"] = BucketService::FileUploader.new(file, filename, headers).upload
+      @params["file_url"], @params["kind"] = BucketService::FileUploader.new(file, filename, headers).upload
       Monads::Right.new(::Media.new(@params))
     end
   end

@@ -49,7 +49,7 @@ class MediaController < ApplicationController
   private def media_params
     params.validation do
       required :title
-      required :kind
+      required :theme_id
     end
   end
 
