@@ -17,7 +17,7 @@ This is a project written using [Amber](https://amberframework.org). Enjoy!
 
 A - Installing crystal
 - Install crystal 0.28.0 using `crenv`
-- [Intall amber](https://docs.amberframework.org/amber/getting-started)
+- [Install amber](https://docs.amberframework.org/amber/getting-started)
 - Run `shards install` to install dependencies
 - Run `amber db create migrate` to setup the database
 - Run `amber w` to start the server

@@ -19,7 +19,7 @@ class MediaController < ApplicationController
   end
 
   def create
-    Factory::Media.new(media_params.validate!, params.files["file"])
+    Factory::Media.new(creation_media_params.validate!, params.files["file"])
       .build
       .bind(save_media)
       .fmap(handle_success(201))
@@ -27,7 +27,7 @@ class MediaController < ApplicationController
   end
 
   def update
-    media.set_attributes media_params.validate!
+    media.set_attributes update_media_params.validate!
     if media.save
       respond_with do
         json media.to_json
@@ -46,10 +46,16 @@ class MediaController < ApplicationController
     end
   end
 
-  private def media_params
+  private def creation_media_params
     params.validation do
       required :title
       required :theme_id
+    end
+  end
+
+  private def update_media_params
+    params.validation do
+      required :title
     end
   end
 
