@@ -47,6 +47,12 @@ dependencies:
     github: alex-lairan/monads
     version: 0.3.0
 
+  awscr-s3:
+    github: taylorfinnell/awscr-s3
+
+  dotenv:
+    github: gdotdesign/cr-dotenv
+
 development_dependencies:
   garnet_spec:
     github: amberframework/garnet-spec

@@ -1,20 +1,20 @@
 require "./spec_helper"
 
-def user_hash
-  {"password" => "qwertyuiop", "email" => "fake@fake.com", "nickname" => "Fake"}
+def default_user_hash
+  {"password" => "qwertyuiop", "password_confirmation" => "qwertyuiop", "email" => "fake@fake.com", "nickname" => "Fake"}
 end
 
-def user_params
+def user_params(user_hash : Hash(String, String))
   params = [] of String
   params << "email=#{user_hash["email"]}"
   params << "password=#{user_hash["password"]}"
-  params << "password_confirmation=#{user_hash["password"]}"
+  params << "password_confirmation=#{user_hash["password_confirmation"]}"
   params << "nickname=#{user_hash["nickname"]}"
   params.join("&")
 end
 
 def create_user
-  model = User.new(user_hash)
+  model = User.new(default_user_hash)
   model.save
   model
 end
@@ -65,9 +65,45 @@ describe UserControllerTest do
   describe "#create" do
     it "creates a user" do
       User.clear
-      response = subject.post "/auth/sign_up", body: user_params
+      response = subject.post "/auth/sign_up", body: user_params(default_user_hash)
 
       response.status_code.should eq(201)
+    end
+
+    describe "when email and password are already taken" do
+      it "returns errors" do
+        User.clear
+        create_user
+        response = subject.post "/auth/sign_up", body: user_params(default_user_hash)
+        errors = {errors: [{email: "Email already in use"}, {nickname: "Nickname already in use"}]}
+
+        response.status_code.should eq(403)
+        response.body.should eq(errors.to_json)
+      end
+    end
+
+    describe "when the passwords are different" do
+      it "returns errors" do
+        User.clear
+        hash = default_user_hash.merge({"password_confirmation" => "qwertyuio"})
+        response = subject.post "/auth/sign_up", body: user_params(hash)
+        errors = {errors: [{password: "Passwords don't match"}]}
+
+        response.status_code.should eq(403)
+        response.body.should eq(errors.to_json)
+      end
+    end
+
+    describe "when the password is too short" do
+      it "returns errors" do
+        User.clear
+        hash = default_user_hash.merge({"password" => "qwerty", "password_confirmation" => "qwerty"})
+        response = subject.post "/auth/sign_up", body: user_params(hash)
+        errors = {errors: [{password: "Password is too short"}]}
+
+        response.status_code.should eq(403)
+        response.body.should eq(errors.to_json)
+      end
     end
   end
 
@@ -75,7 +111,7 @@ describe UserControllerTest do
     it "updates a user" do
       User.clear
       model = create_user
-      response = subject.patch "/users/#{model.id}", body: user_params
+      response = subject.patch "/users/#{model.id}", body: user_params(default_user_hash)
 
       response.status_code.should eq(200)
     end

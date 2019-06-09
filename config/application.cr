@@ -3,6 +3,9 @@ require "./i18n.cr"
 require "./initializers/**"
 
 require "amber"
+require "dotenv"
+Dotenv.load
+
 require "../src/models/**"
 require "../src/pipes/**"
 require "../src/services/**"

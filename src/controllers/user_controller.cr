@@ -14,12 +14,12 @@ class UserController < ApplicationController
 
   def show
     respond_with do
-      json @user.to_json
+      json user.to_json
     end
   end
 
   def create
-    Auth::UserFactory.new(user_params.validate!)
+    Factory::User.new(user_params.validate!)
       .build
       .bind(save_user)
       .fmap(handle_success(201))
@@ -43,7 +43,7 @@ class UserController < ApplicationController
 
   private def user_params
     params.validation do
-      required :password { |p| p.size >= 8 }
+      required :password
       required :password_confirmation
       required :email { |p| p.email? }
       required :nickname
@@ -68,14 +68,6 @@ class UserController < ApplicationController
     ->(user : User) do
       respond_with(code) do
         json user.to_json
-      end
-    end
-  end
-
-  private def handle_error
-    ->(errors : Array(Hash(String, String))) do
-      respond_with(403) do
-        json({errors: errors}.to_json)
       end
     end
   end
