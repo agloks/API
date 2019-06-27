@@ -4,8 +4,8 @@ Amber::Server.configure do
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
     plug Amber::Pipe::Session.new
-    plug Pipes::Auth.new
-    plug Amber::Pipe::CORS.new
+    # plug Pipes::Auth.new
+    # plug Amber::Pipe::CORS.new
   end
 
   pipeline :public_api do
@@ -13,7 +13,7 @@ Amber::Server.configure do
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
     plug Amber::Pipe::Session.new
-    plug Amber::Pipe::CORS.new
+    # plug Amber::Pipe::CORS.new
   end
 
   # All static content will run these transformations
@@ -29,6 +29,7 @@ Amber::Server.configure do
 
     resources "/themes", ThemeController, except: [:new, :edit]
     resources "/themes/:theme_id/medias", MediaController, except: [:new, :edit]
+    resources "/medias/:media_id/questions", QuestionController, except: [:new, :edit]
   end
 
   routes :public_api do
