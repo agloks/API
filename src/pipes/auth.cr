@@ -11,13 +11,7 @@ module Pipes
         return missing_JWT(context)
       end
 
-      pp data
-      pp data[0]["user_id"]
-      pp context.session[:current_user_id]
-      pp context.session[:current_user_id].class
-
-      return not_auth(context) if context.session[:current_user_id] != data[0]["user_id"].to_s
-
+      context.session[:current_user_id] = data[0]["user_id"]
       call_next(context)
     end
 
