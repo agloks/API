@@ -2,7 +2,7 @@ require "jwt"
 
 module Auth
   class JWTService
-    def initialize(@algorithm = "HS256", @secret_key = "7QNl8ieiaHwq")
+    def initialize(@algorithm = JWT::Algorithm::HS256, @secret_key = "7QNl8ieiaHwq")
     end
 
     def encode(payload)
