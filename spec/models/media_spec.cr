@@ -14,6 +14,14 @@ describe Media do
       media.theme.class.should eq(Theme)
       media.theme.title.should eq("theme title")
     end
+
+    it "has many questions" do
+      media = Media.create(title: "media title", kind: "picture")
+      question_1 = Question.create(content: "question content 1", media_id: media.id)
+      question_2 = Question.create(content: "question content 2", media_id: media.id)
+
+      media.questions.map(&.id).should eq([question_1.id, question_2.id])
+    end
   end
 
   describe "scopes" do

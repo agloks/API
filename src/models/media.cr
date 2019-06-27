@@ -9,6 +9,7 @@ class Media < Granite::Base
   timestamps
 
   belongs_to :theme, foreign_key: theme_id : Int32
+  has_many questions : Question
 
   def self.pictures
     Media.where(kind: "picture")
