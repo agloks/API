@@ -20,6 +20,7 @@ class ThemeController < ApplicationController
 
   def create
     theme = Theme.new theme_params.validate!
+    theme.user_id = session[:current_user_id].try(&.to_i)
     if theme.save
       respond_with(201) do
         json theme.to_json
