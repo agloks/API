@@ -2,7 +2,7 @@
 CREATE TABLE questions (
   id BIGSERIAL PRIMARY KEY,
   content VARCHAR,
-  media_id INTEGER NULL,
+  media_id INTEGER,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
