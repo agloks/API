@@ -9,10 +9,10 @@ class User < Granite::Base
   timestamps
 
   validate(:email, "Email already in use", ->(user : self) {
-    User.find_by(email: user.email).nil?
+    User.all("WHERE email = ? AND id != ?", [user.email, user.id]).empty?
   })
 
   validate(:nickname, "Nickname already in use", ->(user : self) {
-    User.find_by(nickname: user.nickname).nil?
+    User.all("WHERE nickname = ? AND id != ?", [user.nickname, user.id]).empty?
   })
 end

@@ -27,8 +27,8 @@ class UserController < ApplicationController
   end
 
   def update
-    user.set_attributes user_params.validate!
-    result = user.save ? user.to_json : {error: "NOPE"}.to_json
+    user.set_attributes update_user_params.validate!
+    result = user.save ? user.to_json : {errors: formatted_errors(user)}.to_json
     respond_with do
       json result
     end
@@ -50,6 +50,13 @@ class UserController < ApplicationController
     end
   end
 
+  private def update_user_params
+    params.validation do
+      optional :email { |p| p.email? }
+      optional :nickname
+    end
+  end
+
   private def set_user
     @user = User.find! params[:id]
   end
@@ -59,7 +66,7 @@ class UserController < ApplicationController
       if user.save
         Monads::Right.new(user)
       else
-        Monads::Left.new(user.errors.map { |error| {error.field.to_s => error.message.to_s} })
+        Monads::Left.new(formatted_errors(user))
       end
     end
   end
@@ -70,5 +77,9 @@ class UserController < ApplicationController
         json user.to_json
       end
     end
+  end
+
+  private def formatted_errors(user)
+    user.errors.map { |error| {error.field.to_s => error.message.to_s} }
   end
 end
