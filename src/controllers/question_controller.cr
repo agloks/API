@@ -26,7 +26,7 @@ class QuestionController < ApplicationController
       end
     else
       respond_with(403) do
-        json({errors: "question.errors"}.to_json)
+        json({errors: formatted_errors(question)}.to_json)
       end
     end
   end
@@ -39,7 +39,7 @@ class QuestionController < ApplicationController
       end
     else
       respond_with(403) do
-        json({errors: "question.errors"}.to_json)
+        json({errors: formatted_errors(question)}.to_json)
       end
     end
   end

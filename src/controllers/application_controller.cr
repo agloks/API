@@ -11,4 +11,8 @@ class ApplicationController < Amber::Controller::Base
       end
     end
   end
+
+  private def formatted_errors(model)
+    model.errors.map { |error| {error.field.to_s => error.message.to_s} }
+  end
 end

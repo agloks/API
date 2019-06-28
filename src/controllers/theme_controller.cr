@@ -27,7 +27,7 @@ class ThemeController < ApplicationController
       end
     else
       respond_with(403) do
-        json({errors: "theme.errors"}.to_json)
+        json({errors: formatted_errors(theme)}.to_json)
       end
     end
   end
@@ -40,7 +40,7 @@ class ThemeController < ApplicationController
       end
     else
       respond_with(403) do
-        json({errors: "theme.errors"}.to_json)
+        json({errors: formatted_errors(theme)}.to_json)
       end
     end
   end

@@ -78,8 +78,4 @@ class UserController < ApplicationController
       end
     end
   end
-
-  private def formatted_errors(user)
-    user.errors.map { |error| {error.field.to_s => error.message.to_s} }
-  end
 end
