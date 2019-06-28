@@ -2,11 +2,11 @@ class MediaController < ApplicationController
   getter media = Media.new
 
   before_action do
-    only [:show, :edit, :update, :destroy] { set_media }
+    only [:show, :update, :destroy] { set_media }
   end
 
   def index
-    medias = Media.all
+    medias = Media.where(theme_id: params["theme_id"]).select
     respond_with do
       json medias.to_json
     end

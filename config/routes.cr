@@ -29,6 +29,7 @@ Amber::Server.configure do
 
     resources "/themes", ThemeController, except: [:new, :edit]
     resources "/themes/:theme_id/medias", MediaController, except: [:new, :edit]
+    resources "/medias/:media_id/questions", QuestionController, except: [:new, :edit]
   end
 
   routes :public_api do
