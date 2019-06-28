@@ -6,7 +6,11 @@ class UserController < ApplicationController
   end
 
   def index
-    users = User.all
+    if params["q"]?
+      users = User.all("WHERE nickname LIKE ?", ["%#{params["q"]}%"])
+    else
+      users = User.all
+    end
     respond_with do
       json users.to_json
     end
