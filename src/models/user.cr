@@ -9,10 +9,10 @@ class User < Granite::Base
   timestamps
 
   validate(:email, "Email already in use", ->(user : self) {
-    User.find_by(email: user.email).nil?
+    Validation::Uniqueness.new(user, "email").valid?
   })
 
   validate(:nickname, "Nickname already in use", ->(user : self) {
-    User.find_by(nickname: user.nickname).nil?
+    Validation::Uniqueness.new(user, "nickname").valid?
   })
 end

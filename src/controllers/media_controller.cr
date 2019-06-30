@@ -34,7 +34,7 @@ class MediaController < ApplicationController
       end
     else
       respond_with(403) do
-        json({errors: "media.errors"}.to_json)
+        json({errors: formatted_errors(media)}.to_json)
       end
     end
   end

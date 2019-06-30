@@ -47,6 +47,17 @@ describe UserControllerTest do
       response.status_code.should eq(200)
       response.body.should contain("[]")
     end
+
+    describe "with a q param" do
+      it "returns matching users" do
+        user1 = User.create(email: "fake1@test.fr", nickname: "foobar")
+        user2 = User.create(email: "fake2@test.fr", nickname: "bar")
+        response = subject.get "/users?q=foo"
+
+        response.status_code.should eq(200)
+        response.body.should contain([user1].to_json)
+      end
+    end
   end
 
   describe "#show" do
