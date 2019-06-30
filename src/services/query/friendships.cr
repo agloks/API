@@ -25,7 +25,7 @@ module Query
       res.each do
         data << {
           "user_id" => res.read(Int64 | Nil).to_s, "friendship_id" => res.read(Int64 | Nil).to_s,
-          "nickname" => res.read(String | Nil), "status" => res.read(String | Nil)
+          "nickname" => res.read(String | Nil), "status" => res.read(String | Nil),
         }
       end
 
@@ -47,7 +47,7 @@ module Query
     end
 
     private def select_status(status)
-       " AND friendships.status = '#{status}'"
+      " AND friendships.status = '#{status}'"
     end
 
     private def asked_query(id)

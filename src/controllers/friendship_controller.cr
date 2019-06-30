@@ -1,8 +1,8 @@
 class FriendshipController < ApplicationController
   INDEX_FINDER = {
-    nil => ->(repo : Query::Friendships) { repo.all },
+    nil        => ->(repo : Query::Friendships) { repo.all },
     "accepted" => ->(repo : Query::Friendships) { repo.accepted },
-    "pending" => ->(repo : Query::Friendships) { repo.pending }
+    "pending"  => ->(repo : Query::Friendships) { repo.pending },
   }
 
   getter friendship = Friendship.new
