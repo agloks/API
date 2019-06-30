@@ -15,6 +15,14 @@ describe Theme do
       theme.medias.map(&.id).should eq([media_1.id, media_2.id])
     end
 
+    it "has many lobbies" do
+      theme = Theme.create(title: "theme title", description: "description")
+      lobby_1 = Lobby.create(restricted: true, theme_id: theme.id)
+      lobby_2 = Lobby.create(restricted: false, theme_id: theme.id)
+
+      theme.lobbies.map(&.id).should eq([lobby_1.id, lobby_2.id])
+    end
+
     it "belongs to a user" do
       user = User.create(email: "test@test.fr")
       theme = Theme.create(title: "theme title", description: "description", user_id: user.id)
