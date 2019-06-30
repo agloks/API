@@ -68,7 +68,7 @@ class MediaController < ApplicationController
       if media.save
         Monads::Right.new(media)
       else
-        Monads::Left.new(media.errors.map { |error| {error.field.to_s => error.message.to_s} })
+        Monads::Left.new(formatted_errors(media))
       end
     end
   end
