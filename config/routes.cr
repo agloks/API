@@ -28,6 +28,7 @@ Amber::Server.configure do
     delete "/auth/sign_out", SessionController, :delete
 
     resources "/themes", ThemeController, except: [:new, :edit]
+    resources "/friendships", FriendshipController, only: [:index, :create, :update]
     resources "/themes/:theme_id/medias", MediaController, except: [:new, :edit]
     resources "/medias/:media_id/questions", QuestionController, except: [:new, :edit]
   end
