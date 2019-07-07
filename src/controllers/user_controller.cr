@@ -51,6 +51,7 @@ class UserController < ApplicationController
       required :password_confirmation
       required :email { |p| p.email? }
       required :nickname
+      optional :rank
     end
   end
 
@@ -58,6 +59,7 @@ class UserController < ApplicationController
     params.validation do
       optional :email { |p| p.email? }
       optional :nickname
+      optional :status
     end
   end
 
