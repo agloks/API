@@ -10,6 +10,8 @@ class User < Granite::Base
   field rank : String
   timestamps
 
+  belongs_to :lobby, foreign_key: lobby_id : Int32
+
   before_create :default_values
 
   validate(:email, "Email already in use", ->(user : self) {

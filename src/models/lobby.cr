@@ -6,6 +6,7 @@ class Lobby < Granite::Base
   field restricted : Bool
   field active : Bool
   field questions : Int32
+  field private_key : String
   timestamps
 
   belongs_to :theme, foreign_key: theme_id : Int32

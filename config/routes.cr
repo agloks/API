@@ -36,6 +36,7 @@ Amber::Server.configure do
 
     # Game
     resources "/lobbies", LobbyController, except: [:new, :edit, :update]
+    resources "/lobbies/:id/join", LobbySessionController, only: [:create]
   end
 
   routes :public_api do

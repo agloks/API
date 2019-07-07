@@ -56,14 +56,30 @@ describe LobbyControllerTest do
   describe "#create" do
     it "create a lobby" do
       theme = Theme.create(title: "qwekjh")
-      params = {:theme_id => theme.id.to_s, :restricted => "true", :questions => "10"}
+      params = {:theme_id => theme.id.to_s, :restricted => "false", :questions => "10"}
       response = subject.post "/lobbies", body: lobby_params(params)
 
       response.status_code.should eq(201)
       json = JSON.parse(response.body)
       (json["theme_id"]).should eq(theme.id)
       (json["questions"]).should eq(10)
-      (json["restricted"]).should eq(true)
+      (json["restricted"]).should eq(false)
+      (json["private_key"]?).should eq(nil)
+    end
+
+    describe "when restricted is true" do
+      it "sets a private key" do
+        theme = Theme.create(title: "qwekjh")
+        params = {:theme_id => theme.id.to_s, :restricted => "true", :questions => "10"}
+        response = subject.post "/lobbies", body: lobby_params(params)
+
+        response.status_code.should eq(201)
+        json = JSON.parse(response.body)
+        (json["theme_id"]).should eq(theme.id)
+        (json["questions"]).should eq(10)
+        (json["restricted"]).should eq(true)
+        (json["private_key"]?).should_not eq(nil)
+      end
     end
   end
 

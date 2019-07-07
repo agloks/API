@@ -19,18 +19,11 @@ class LobbyController < ApplicationController
   end
 
   def create
-    lobby = Lobby.new(creation_lobby_params.validate!)
-    lobby.created_by = session["current_user_id"].try(&.to_i)
-    lobby.active = true
-    if lobby.save
-      respond_with(201) do
-        json lobby.to_json
-      end
-    else
-      respond_with(403) do
-        json({errors: formatted_errors(lobby)}.to_json)
-      end
-    end
+    Factory::Lobby.new(creation_lobby_params.validate!, session["current_user_id"])
+      .build
+      .bind(save_lobby)
+      .fmap(handle_success(201))
+      .value_or(handle_error)
   end
 
   def destroy
@@ -56,5 +49,23 @@ class LobbyController < ApplicationController
 
   private def set_lobby
     @lobby = Lobby.find! params[:id]
+  end
+
+  private def save_lobby
+    ->(lobby : Lobby) do
+      if lobby.save
+        Monads::Right.new(lobby)
+      else
+        Monads::Left.new(formatted_errors(lobby))
+      end
+    end
+  end
+
+  private def handle_success(code)
+    ->(lobby : Lobby) do
+      respond_with(code) do
+        json lobby.to_json
+      end
+    end
   end
 end
