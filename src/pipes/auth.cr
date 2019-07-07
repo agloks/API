@@ -1,6 +1,10 @@
 module Pipes
   class Auth < Amber::Pipe::Base
     def call(context)
+      if context.request.method == "OPTIONS"
+        context.request.headers["Access-Control-Request-Headers"] = "content-type,jwt"
+      end
+
       return call_next(context) if context.request.method == "OPTIONS"
       begin
         token = context.request.headers["JWT"]
