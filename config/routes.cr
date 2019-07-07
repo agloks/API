@@ -24,13 +24,18 @@ Amber::Server.configure do
   end
 
   routes :api do
+    # User
     resources "/users", UserController, except: [:create, :new, :edit]
     delete "/auth/sign_out", SessionController, :delete
-
-    resources "/themes", ThemeController, except: [:new, :edit]
     resources "/friendships", FriendshipController, only: [:index, :create, :update]
+
+    # Set up
+    resources "/themes", ThemeController, except: [:new, :edit]
     resources "/themes/:theme_id/medias", MediaController, except: [:new, :edit]
     resources "/medias/:media_id/questions", QuestionController, except: [:new, :edit]
+
+    # Game
+    resources "/lobbies", LobbyController, except: [:new, :edit, :update]
   end
 
   routes :public_api do
