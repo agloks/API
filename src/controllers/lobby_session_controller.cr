@@ -3,7 +3,15 @@ class LobbySessionController < ApplicationController
   getter user = User.new
 
   before_action do
-    only [:create] { set_lobby }
+    only [:create] { set_current_user }
+    only [:index, :create] { set_lobby }
+  end
+
+  def index
+    users = User.where(lobby_id: lobby.id).select
+    respond_with do
+      json(users.to_json)
+    end
   end
 
   def create
@@ -21,6 +29,9 @@ class LobbySessionController < ApplicationController
 
   private def set_lobby
     @lobby = Lobby.find! params[:id]
+  end
+
+  private def set_current_user
     @user = User.find! session["current_user_id"]
   end
 end
