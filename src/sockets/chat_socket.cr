@@ -4,7 +4,6 @@ struct ChatSocket < Amber::WebSockets::ClientSocket
   def on_connect
     # returning true accept all connections
     # you can use authentication here
-    pp "qwlkejwqk"
     true
   end
 end

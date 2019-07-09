@@ -1,6 +1,5 @@
 class ChatRoomChannel < Amber::WebSockets::Channel
   def handle_joined(client_socket, message)
-    "joined"
   end
 
   def handle_message(client_socket, message)
@@ -19,6 +18,5 @@ class ChatRoomChannel < Amber::WebSockets::Channel
   end
 
   def handle_leave(client_socket)
-    pp "leave"
   end
 end
