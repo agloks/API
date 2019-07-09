@@ -58,6 +58,8 @@ class UserController < ApplicationController
     params.validation do
       optional :email { |p| p.email? }
       optional :nickname
+      optional :status
+      optional :rank
     end
   end
 

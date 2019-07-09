@@ -9,4 +9,5 @@ class Theme < Granite::Base
 
   belongs_to :user, foreign_key: user_id : Int32
   has_many medias : Media
+  has_many lobbies : Lobby
 end
