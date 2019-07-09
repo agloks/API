@@ -39,6 +39,7 @@ Amber::Server.configure do
     resources "/lobbies/:id/users", LobbySessionController, only: [:index]
     resources "/lobbies/:id/join", LobbySessionController, only: [:create]
     resources "/lobbies/:id/messages", MessageController, only: [:index]
+    websocket "/chat", ChatSocket
   end
 
   routes :public_api do

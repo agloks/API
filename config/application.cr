@@ -3,6 +3,8 @@ require "./i18n.cr"
 require "./initializers/**"
 
 require "amber"
+require "../src/sockets/**"
+require "../src/channels/**"
 require "dotenv"
 Dotenv.load
 
