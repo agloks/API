@@ -4,6 +4,7 @@ Amber::Server.configure do
     plug Amber::Pipe::Error.new
     plug Amber::Pipe::Logger.new
     plug Amber::Pipe::Session.new
+    plug Pipes::CORS.new
     plug Pipes::Auth.new
     plug Amber::Pipe::CORS.new(methods: %w(POST PUT PATCH DELETE GET))
   end
