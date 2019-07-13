@@ -2,6 +2,7 @@ module Pipes
   class Auth < Amber::Pipe::Base
     def call(context)
       return call_next(context) if context.request.method == "OPTIONS"
+
       begin
         token = context.request.headers["JWT"]
         data = ::Auth::JWTService.new.decode(token)
