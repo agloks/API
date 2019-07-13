@@ -15,7 +15,8 @@ class ChatRoomChannel < Amber::WebSockets::Channel
     Message.create(content: answer, lobby_id: lobby_id, user_id: user_id)
     if question
       results = JSON.parse(question.answers.not_nil!).as_a.map do |a|
-        Levenshtein.distance(a.as_s, answer) / a.as_s.size.to_f
+        score = 200 - 200 / a.as_s.size * Levenshtein.distance(a.as_s, answer)
+        score.positive? ? score : 0
       end
     end
 
@@ -29,7 +30,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
         json.field "payload" do
           json.object do
             json.field "user_id", user_id
-            json.field "score", results.min.to_s
+            json.field "score", results.max.to_s
             json.field "content", answer
           end
         end
