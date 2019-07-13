@@ -2,10 +2,11 @@ require "http/web_socket"
 
 class GameService
   def initialize(@lobby : Lobby)
-    @ws = HTTP::WebSocket.new(URI.parse("ws://localhost:3000/chat"))
-    @topic = "chat_room:lobby_#{@lobby.id}"
+    @ws = HTTP::WebSocket.new(URI.parse("ws://localhost:3000/game"))
+    @topic = "game_room:lobby_#{@lobby.id}"
   end
 
+  # TODO Register current question ?
   def run
     medias = Media.where(theme_id: @lobby.theme.id).select.shuffle[0...@lobby.questions]
     @ws.send(join_message)
@@ -36,7 +37,6 @@ class GameService
         json.field "event", "message"
         json.field "topic", @topic
         json.field "content", content
-        json.field "source", "game"
       end
     end
   end

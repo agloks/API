@@ -41,7 +41,7 @@ Amber::Server.configure do
     resources "/lobbies/:id/messages", MessageController, only: [:index]
     resources "/game", GameController, only: [:create]
     websocket "/chat", ChatSocket
-    # websocket "/game", GameSocket
+    websocket "/game", GameSocket
   end
 
   routes :public_api do
