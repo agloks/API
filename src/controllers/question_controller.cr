@@ -55,12 +55,14 @@ class QuestionController < ApplicationController
     params.validation do
       required :content
       required :media_id
+      required :answers
     end
   end
 
   private def update_question_params
     params.validation do
-      required :content
+      optional :content
+      optional :answers
     end
   end
 

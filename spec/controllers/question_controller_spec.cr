@@ -5,7 +5,7 @@ def question_hash
 end
 
 def question_params
-  "content=#{question_hash["content"]}"
+  "content=#{question_hash["content"]}&answers=blabla&answers=trololol"
 end
 
 def create_question
