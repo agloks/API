@@ -13,7 +13,7 @@ class GameController < ApplicationController
     else
       GameService.new(lobby).run
       respond_with do
-        json("Fin de la partie")
+        json ""
       end
     end
   end

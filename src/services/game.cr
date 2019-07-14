@@ -70,13 +70,14 @@ class GameService
   end
 
   private def round_score(question)
-    Score.where(question_id: question.id, game_id: @game.id).map { |score| {score.user.id => score.points} }
+    Score.where(question_id: question.id, game_id: @game.id).select.each_with_object({} of Int64 => Int32) do |score, hash|
+      hash[score.user.id.not_nil!] = score.points.not_nil!
+    end
   end
 
   private def game_score
-    ""
-    # users = User.where("JOIN users_games ug ON ug.user_id = users.id WHERE ug.game_id = ?", [@game.id])
-    # Score.where(game_id: game.id).group_by { |score| score.user_id }.map { |id, scores| {id => scores.sum(&.points)}
+    Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
+         .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }[0]
   end
 
   private def add_players(users)
@@ -86,9 +87,8 @@ class GameService
   end
 
   private def missing_players
-    query = "SELECT * FROM users \
-      LEFT JOIN games_users gc ON gc.user_id = users.id \
-      WHERE users.lobby_id = ? AND gc.id IS NULL"
+    query = "LEFT JOIN games_users gu ON gu.user_id = users.id \
+      WHERE users.lobby_id = ? AND gu.id IS NULL"
     User.all(query, [@lobby.id])
   end
 
