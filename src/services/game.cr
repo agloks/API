@@ -35,12 +35,12 @@ class GameService
 
   private def send_new_round_message(media, question, index)
     payload = {
-      "game_id" => @game.id,
-      "turn" => index + 1,
-      "media_id" => media.id,
+      "game_id"     => @game.id,
+      "turn"        => index + 1,
+      "media_id"    => media.id,
       "question_id" => question.id,
-      "file_url" => media.file_url,
-      "question" => question.content
+      "file_url"    => media.file_url,
+      "question"    => question.content,
     }
     GameSocket.broadcast("message", @topic, "round:new", payload)
   end
@@ -51,11 +51,11 @@ class GameService
 
   private def send_finish_round_message(question)
     payload = {
-      "game_id" => @game.id,
+      "game_id"     => @game.id,
       "question_id" => question.id,
-      "question" => question.content,
-      "answers" => question.answers,
-      "score" => round_score(question)
+      "question"    => question.content,
+      "answers"     => question.answers,
+      "score"       => round_score(question),
     }
     GameSocket.broadcast("message", @topic, "round:finish", payload)
   end
@@ -77,7 +77,7 @@ class GameService
 
   private def game_score
     Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
-         .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }[0]
+      .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }[0]
   end
 
   private def add_players(users)
