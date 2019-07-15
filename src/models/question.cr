@@ -6,5 +6,6 @@ class Question < Granite::Base
 
   primary id : Int64
   field content : String
+  field answers : String
   timestamps
 end
