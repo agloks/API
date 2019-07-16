@@ -6,19 +6,13 @@ class GameController < ApplicationController
   end
 
   def create
-    if params["lobby_id"] == nil
-      respond_with(403) do
-        json({errors: [{lobby_id: "Missing params"}]}.to_json)
-      end
-    else
-      GameService.new(lobby).run
-      respond_with do
-        json("Fin de la partie")
-      end
+    GameService.new(lobby).run
+    respond_with do
+      json ""
     end
   end
 
   private def set_lobby
-    @lobby = Lobby.find! params[:lobby_id]
+    @lobby = Lobby.find! params[:id]
   end
 end

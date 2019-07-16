@@ -39,7 +39,8 @@ Amber::Server.configure do
     resources "/lobbies/:id/users", LobbySessionController, only: [:index]
     resources "/lobbies/:id/join", LobbySessionController, only: [:create]
     resources "/lobbies/:id/messages", MessageController, only: [:index]
-    resources "/game", GameController, only: [:create]
+    resources "/lobbies/:id/game", GameController, only: [:create]
+    resources "/lobbies/:id/scores", ScoreController, only: [:index]
     websocket "/chat", ChatSocket
     websocket "/game", GameSocket
   end
