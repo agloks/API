@@ -2,6 +2,7 @@ require "levenshtein"
 
 class ChatRoomChannel < Amber::WebSockets::Channel
   def handle_joined(client_socket, message)
+    pp message
     payload = message["payload"]
     user_id = ::Auth::JWTService.new.decode(payload["JWT"].to_s)[0]["user_id"].to_s
     lobby_id = message["topic"].to_s.split(":lobby_")[1]
@@ -15,6 +16,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
   end
 
   def handle_message(client_socket, message)
+    pp message
     payload = message["payload"]
     user = User.find(::Auth::JWTService.new.decode(payload["JWT"].to_s)[0]["user_id"].to_s)
     return if user.nil?
