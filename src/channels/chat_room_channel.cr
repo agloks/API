@@ -16,13 +16,14 @@ class ChatRoomChannel < Amber::WebSockets::Channel
 
   def handle_message(client_socket, message)
     payload = message["payload"]
+    user = User.find(::Auth::JWTService.new.decode(payload["JWT"].to_s)[0]["user_id"].to_s)
+    return if user.nil?
     lobby_id = message["topic"].to_s.split(":lobby_")[1]
-    user_id = ::Auth::JWTService.new.decode(payload["JWT"].to_s)[0]["user_id"].to_s
     answer = payload["content"].to_s
     running_game = Game.find_by(lobby_id: lobby_id, running: true)
     scores = [0]
 
-    Message.create(content: answer, lobby_id: lobby_id, user_id: user_id)
+    Message.create(content: answer, lobby_id: lobby_id, user_id: user.id)
 
     if running_game && payload["question_id"]?
       question = Question.find payload["question_id"].to_s
@@ -32,7 +33,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
           points = 200 - 200 / a.as_s.size * Levenshtein.distance(a.as_s, answer)
           points.positive? ? points : 0
         end.max
-        store_score(user_id, question.id, running_game.id, score)
+        store_score(user.id, question.id, running_game.id, score)
       end
     end
 
@@ -43,7 +44,12 @@ class ChatRoomChannel < Amber::WebSockets::Channel
         json.field "subject", "msg:new"
         json.field "payload" do
           json.object do
-            json.field "user_id", user_id
+            json.field "user" do
+              json.object do
+                json.field "id", user.id
+                json.field "nickname", user.nickname
+              end
+            end
             json.field "score", score.to_s
             json.field "content", answer
           end
