@@ -21,8 +21,9 @@ class LobbySessionController < ApplicationController
       end
     else
       user.update lobby_id: lobby.id
+      game = Game.find_by(lobby_id: lobby.id, running: true)
       respond_with do
-        json(user.to_json)
+        json({running: !game.nil?}.to_json)
       end
     end
   end
