@@ -10,27 +10,36 @@ class GameService
   end
 
   def run
-    return if Game.find_by(lobby_id: @lobby.id, running: true)
+    if Game.find_by(lobby_id: @lobby.id, running: true)
+      return Monads::Left.new([{"game" => "A game is already running"}])
+    end
+    if Media.where(theme_id: @lobby.theme.id).count < @lobby.questions.not_nil!
+      return Monads::Left.new([{"medias" => "Not enough questions for this lobby"}])
+    end
 
     medias = Media.where(theme_id: @lobby.theme.id).select.shuffle[0...@lobby.questions]
-    @game = Game.create(running: true, lobby_id: @lobby.id)
+    @game = game = Game.create(running: true, lobby_id: @lobby.id)
     add_players(all_players)
     send_new_game_message
 
-    medias.each_with_index do |media, index|
-      question = media.questions.shuffle[0]
-      add_players(missing_players)
-      send_new_round_message(media, question, index)
-      15.times do |time|
-        sleep 1
-        send_timer_message(time)
+    spawn do
+      medias.each_with_index do |media, index|
+        question = media.questions.shuffle[0]
+        add_players(missing_players)
+        send_new_round_message(media, question, index)
+        15.times do |time|
+          sleep 1
+          send_timer_message(time)
+        end
+        send_finish_round_message(question)
+        sleep 5
       end
-      send_finish_round_message(question)
-      sleep 5
+
+      game.update(running: false)
+      send_finish_game_message
     end
 
-    @game.update(running: false)
-    send_finish_game_message
+    Monads::Right.new(@game)
   end
 
   private def send_new_round_message(media, question, index)
@@ -76,8 +85,9 @@ class GameService
   end
 
   private def game_score
-    Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
-      .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }[0]
+    scores = Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
+      .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }
+    scores.empty? ? Hash(String, String).new : scores[0]
   end
 
   private def add_players(users)
