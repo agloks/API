@@ -2,15 +2,14 @@ require "levenshtein"
 
 class ChatRoomChannel < Amber::WebSockets::Channel
   def handle_joined(client_socket, message)
-    pp message
     payload = message["payload"]
     user_id = ::Auth::JWTService.new.decode(payload["JWT"].to_s)[0]["user_id"].to_s
     lobby_id = message["topic"].to_s.split(":lobby_")[1]
     store_channel_key(user_id, lobby_id, client_socket.id)
 
     running_game = Game.find_by(lobby_id: lobby_id, running: true)
-    if running_game != nil
-      game_user = GameUser.find_by(user_id: user_id, game_id: running_game.not_nil!.id)
+    unless running_game.nil?
+      game_user = GameUser.find_by(user_id: user_id, game_id: running_game.id)
       GameUser.create(user_id: user_id, game_id: running_game.not_nil!.id) if game_user == nil
     end
   end

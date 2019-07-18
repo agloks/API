@@ -3,7 +3,7 @@ class FriendshipController < ApplicationController
     nil        => ->(repo : Query::Friendships) { repo.all },
     "accepted" => ->(repo : Query::Friendships) { repo.accepted },
     "pending"  => ->(repo : Query::Friendships) { repo.pending },
-    "sent"  => ->(repo : Query::Friendships) { repo.sent },
+    "sent"     => ->(repo : Query::Friendships) { repo.sent },
   }
 
   getter friendship = Friendship.new

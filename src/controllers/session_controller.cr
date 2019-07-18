@@ -6,7 +6,8 @@ class SessionController < ApplicationController
       if Crypto::Bcrypt::Password.new(user.password || "") == auth_params[:password]
         session[:current_user_id] = user.id
         respond_with do
-          json({"token": Auth::JWTService.new.encode({user_id: user.id})}.to_json)
+          json({"token":   Auth::JWTService.new.encode({user_id: user.id}),
+                "user_id": user.id}.to_json)
         end
       else
         respond_with(403) do
