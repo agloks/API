@@ -68,6 +68,7 @@ class GameService
       "question"    => question.content,
       "answers"     => question.answers,
       "score"       => round_score(question),
+      "total"       => game_score,
     }
     GameSocket.broadcast("message", @topic, "round:finish", payload)
   end
