@@ -49,6 +49,7 @@ class GameService
       "game_id"     => @game.id,
       "turn"        => index + 1,
       "media_id"    => media.id,
+      "kind"        => media.kind,
       "question_id" => question.id,
       "file_url"    => media.file_url,
       "question"    => question.content,
