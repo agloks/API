@@ -30,9 +30,9 @@ class GameService
         question = media.questions.shuffle[0]
         add_players(missing_players)
         send_new_round_message(media, question, index)
-        10.times do |time|
+        15.times do |time|
           sleep 1
-          # send_timer_message(time)
+          send_timer_message(time)
         end
         send_finish_round_message(question)
         sleep 5
