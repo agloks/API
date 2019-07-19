@@ -26,7 +26,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
 
     Message.create(content: answer, lobby_id: lobby_id, user_id: user.id)
 
-    if running_game && payload["question_id"]?
+    if !running_game.nil? && payload["question_id"]?
       question = Question.find payload["question_id"].to_s
 
       if question

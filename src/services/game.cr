@@ -83,14 +83,18 @@ class GameService
   end
 
   private def round_score(question)
-    Score.where(question_id: question.id, game_id: @game.id).select.each_with_object({} of Int64 => Int32) do |score, hash|
-      hash[score.user.id.not_nil!] = score.points.not_nil!
+    Score.where(question_id: question.id, game_id: @game.id).select.each_with_object({} of String => Int32) do |score, hash|
+      hash[score.user.nickname.not_nil!] = score.points.not_nil!
     end
   end
 
   private def game_score
+    users = User.all("JOIN games_users ON games_users.user_id = users.id").each_with_object({} of Int64 => String) do |u, hash|
+      hash[u.id!] = u.nickname!
+    end
+
     scores = Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
-      .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }
+      .map { |id, scores| { users[id] => scores.sum { |s| s.points || 0 }} }
     scores.empty? ? Hash(String, String).new : scores[0]
   end
 
