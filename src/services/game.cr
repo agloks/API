@@ -13,17 +13,19 @@ class GameService
     if Game.find_by(lobby_id: @lobby.id, running: true)
       return Monads::Left.new([{"game" => "A game is already running"}])
     end
-    if Media.where(theme_id: @lobby.theme.id).count < @lobby.questions.not_nil!
+
+    medias = Media.all("JOIN questions ON medias.id = questions.media_id \
+      WHERE medias.theme_id = ? AND questions.answers <> ''", [@lobby.theme.id])
+    if medias.size < @lobby.questions.not_nil!
       return Monads::Left.new([{"medias" => "Not enough questions for this lobby"}])
     end
 
-    medias = Media.where(theme_id: @lobby.theme.id).select.shuffle[0...@lobby.questions]
     @game = game = Game.create(running: true, lobby_id: @lobby.id)
     add_players(all_players)
     send_new_game_message
 
     spawn do
-      medias.each_with_index do |media, index|
+      medias.shuffle[0...@lobby.questions].each_with_index do |media, index|
         question = media.questions.shuffle[0]
         add_players(missing_players)
         send_new_round_message(media, question, index)
