@@ -4,7 +4,7 @@ class GameService
   @game : Game
 
   def initialize(@lobby : Lobby)
-    @ws = HTTP::WebSocket.new(URI.parse("ws://localhost:3000/game"))
+    @ws = HTTP::WebSocket.new(URI.parse("ws://#{ENV["DOMAIN"]}/game"))
     @topic = "game_room:lobby_#{@lobby.id}"
     @game = Game.new
   end
