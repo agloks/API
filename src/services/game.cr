@@ -96,7 +96,7 @@ class GameService
     end
 
     scores = Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
-      .map { |id, scores| { users[id] => scores.sum { |s| s.points || 0 }} }
+      .map { |id, scores| {users[id] => scores.sum { |s| s.points || 0 }} }
     scores.empty? ? Hash(String, String).new : scores[0]
   end
 

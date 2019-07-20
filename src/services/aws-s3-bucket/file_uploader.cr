@@ -3,13 +3,13 @@ require "awscr-s3"
 module BucketService
   class FileUploader
     FILE_PREFIX = {
-      "image/png"  => "picture",
-      "image/jpeg" => "picture",
-      "video/mp4"  => "video",
-      "video/mpeg" => "video",
-      "audio/mpeg" => "music",
-      "audio/mp3" => "music",
-      "audio/wav" => "music",
+      "image/png"   => "picture",
+      "image/jpeg"  => "picture",
+      "video/mp4"   => "video",
+      "video/mpeg"  => "video",
+      "audio/mpeg"  => "music",
+      "audio/mp3"   => "music",
+      "audio/wav"   => "music",
       "audio/x-wav" => "music",
     }
 
