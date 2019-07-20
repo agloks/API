@@ -15,8 +15,34 @@ class LobbyController < ApplicationController
       Lobby.where(restricted: false, active: true).select
     end
 
+    themes = Theme.where(id: lobbies.each_with_object([] of Int32) { |lobby, array| array.push lobby.theme_id! }).select
+    string = JSON.build do |json|
+      json.array do
+        lobbies.each do |lobby|
+          theme = themes.select { |t| t.id == lobby.theme_id }.first
+          pp theme
+          json.object do
+            json.field "id", lobby.id
+            json.field "restricted", lobby.restricted
+            json.field "active", lobby.active
+            json.field "questions", lobby.questions
+            json.field "created_at", lobby.created_at
+            json.field "updated_at", lobby.updated_at
+            json.field "created_by", lobby.created_by
+            json.field "theme" do
+              json.object do
+                json.field "id", lobby.theme_id
+                json.field "title", theme.title
+                json.field "description", theme.description
+              end
+            end
+          end
+        end
+      end
+    end
+
     respond_with do
-      json lobbies.to_json
+      json string
     end
   end
 
