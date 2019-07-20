@@ -6,7 +6,15 @@ class LobbyController < ApplicationController
   end
 
   def index
-    lobbies = Lobby.where(restricted: false, active: true).select
+    lobbies = if params["score"]?
+      query = "JOIN games ON lobbies.id = games.lobby_id \
+        JOIN scores ON games.id = scores.game_id \
+        GROUP BY lobbies.id"
+      Lobby.all(query)
+    else
+      Lobby.where(restricted: false, active: true).select
+    end
+
     respond_with do
       json lobbies.to_json
     end
