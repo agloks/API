@@ -32,7 +32,7 @@ class GameService
         send_new_round_message(media, question, index)
         15.times do |time|
           sleep 1
-          send_timer_message(time)
+          send_timer_message(15 - time)
         end
         send_finish_round_message(question)
         sleep 5
@@ -60,7 +60,7 @@ class GameService
   end
 
   private def send_timer_message(time)
-    GameSocket.broadcast("message", @topic, "timer:increment", {"time" => time})
+    GameSocket.broadcast("message", @topic, "timer:decrement", {"time" => time})
   end
 
   private def send_finish_round_message(question)
