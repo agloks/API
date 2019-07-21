@@ -4,19 +4,15 @@ module Query
     end
 
     def all
-      exec(select_friendships)
+      exec(select_query)
     end
 
     def pending
-      exec(select_friendships("pending"))
-    end
-
-    def sent
-      exec(select_friendships("sent"))
+      exec(select_query("pending"))
     end
 
     def accepted
-      exec(select_friendships("accepted"))
+      exec(select_query("accepted"))
     end
 
     def already_asked?(id)
@@ -30,36 +26,28 @@ module Query
         data << {
           "user_id" => res.read(Int64 | Nil).to_s, "friendship_id" => res.read(Int64 | Nil).to_s,
           "nickname" => res.read(String | Nil), "status" => res.read(String | Nil),
+          "asked_by" => res.read(Int32 | Nil).to_s,
         }
       end
 
       data
     end
 
-    private def select_friendships(status = "all")
-      select_query(where_statment(status)) + select_status(status)
+    private def select_query(status)
+      select_query + select_status(status)
     end
 
-    private def select_query(statment)
-      "SELECT users.id, friendships.id, users.nickname, friendships.status, \
-        friendships.created_at, friendships.updated_at \
+    private def select_query
+      "SELECT users.id, friendships.id, users.nickname, friendships.status, friendships.asked_by \
         FROM friendships \
         LEFT JOIN users \
         ON (friendships.asked_to = users.id OR friendships.asked_by = users.id) \
-        WHERE #{statment} \
+        WHERE (friendships.asked_to = #{@user_id} OR friendships.asked_by = #{@user_id}) \
         AND users.id != #{@user_id}"
     end
 
-    private def where_statment(request)
-      return "friendships.asked_to = #{@user_id}" if request == "pending"
-      return "friendships.asked_by = #{@user_id}" if request == "sent"
-
-      "(friendships.asked_to = #{@user_id} OR friendships.asked_by = #{@user_id})"
-    end
-
     private def select_status(status)
-      status = "pending" if status == "sent"
-      status == "all" ? "" : " AND friendships.status = '#{status}'"
+      " AND friendships.status = '#{status}'"
     end
 
     private def asked_query(id)
