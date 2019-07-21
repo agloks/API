@@ -11,10 +11,10 @@ class ScoreController < ApplicationController
       WHERE games.lobby_id = ?"
     query += " AND games.created_at >= now()::date" if params["daily"]?
     scores = Score.all(query, [params["id"]]).group_by { |score| score.user_id }
-      .map { |id, scores| {users[id] => scores.sum { |s| s.points || 0 }} }
+      .map { |id, scores| {"score" => scores.sum { |s| s.points || 0 }, "nickname" => users[id]} }
 
     respond_with do
-      json (scores.empty? ? scores : scores[0]).to_json
+      json scores.to_json
     end
   end
 end
