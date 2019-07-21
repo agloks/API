@@ -10,8 +10,9 @@ class ScoreController < ApplicationController
     query = "JOIN games ON games.id = scores.game_id \
       WHERE games.lobby_id = ?"
     query += " AND games.created_at >= now()::date" if params["daily"]?
-    scores = Score.all(query, [params["id"]]).group_by { |score| score.user_id }
-      .map { |id, scores| {"score" => scores.sum { |s| s.points || 0 }, "nickname" => users[id]} }
+    scores = Score.all(query, [params["id"]]).group_by { |score| score.user_id }.map do |id, scores|
+      {"score" => scores.sum { |s| s.points || 0 }, "nickname" => users[id], "id" => id}
+    end
 
     respond_with do
       json scores.to_json
