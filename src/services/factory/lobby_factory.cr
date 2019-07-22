@@ -6,6 +6,15 @@ module Factory
     end
 
     def build
+      theme = ::Theme.find(@params["theme_id"])
+      return Monads::Left.new([{"theme" => "Unknown Theme"}]) if theme.nil?
+
+      medias = ::Media.all("JOIN questions ON medias.id = questions.media_id \
+        WHERE medias.theme_id = ? AND questions.answers <> ''", [theme.id])
+      if medias.size < @params["questions"].not_nil!.to_i
+        return Monads::Left.new([{"questions" => "There are not enough questions for this theme : #{medias.size} available"}])
+      end
+
       lobby = ::Lobby.new(@params)
       lobby.created_by = @user_id.try(&.to_i)
       lobby.private_key = Random::Secure.hex(6) if lobby.restricted
