@@ -8,7 +8,7 @@ class ThemeController < ApplicationController
   def index
     current_user = User.find(session["current_user_id"])
     respond_with do
-      json get_themes(current_user.not_nil!).to_json
+      json get_themes(current_user.not_nil!, params["public"]?).to_json
     end
   end
 
@@ -63,7 +63,7 @@ class ThemeController < ApplicationController
     @theme = Theme.find! params[:id]
   end
 
-  private def get_themes(user)
-    user.admin? ? Theme.all : Theme.where(user_id: user.id).select
+  private def get_themes(user, public?)
+    user.admin? || public? ? Theme.all : Theme.where(user_id: user.id).select
   end
 end
