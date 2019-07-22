@@ -28,36 +28,6 @@ class LobbySessionController < ApplicationController
     end
   end
 
-  def join_private
-    if params["private_key"]?
-      lobby = Lobby.find_by(private_key: params["private_key"])
-      if lobby.nil?
-        respond_with(403) do
-          json({errors: {private_key: "Wrong private key"}}.to_json)
-        end
-      else
-        user.update lobby_id: lobby.id
-        game = Game.find_by(lobby_id: lobby.id, running: true)
-        theme = Theme.find!(lobby.theme_id)
-        response = JSON.build do |json|
-          json.object do
-            json.field "lobby_id", lobby.id
-            json.field "name", theme.title
-            json.field "running", !game.nil?
-          end
-        end
-
-        respond_with do
-          json(response)
-        end
-      end
-    else
-      respond_with(403) do
-        json({errors: {private_key: "Missing private key"}}.to_json)
-      end
-    end
-  end
-
   private def set_lobby
     @lobby = Lobby.find! params[:id]
   end

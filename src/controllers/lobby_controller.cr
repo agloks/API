@@ -2,7 +2,7 @@ class LobbyController < ApplicationController
   getter lobby = Lobby.new
 
   before_action do
-    only [:show, :destroy] { set_lobby }
+    only [:destroy] { set_lobby }
   end
 
   def index
@@ -36,8 +36,16 @@ class LobbyController < ApplicationController
   end
 
   def show
-    respond_with do
-      json lobby.to_json
+    lobby = Lobby.find_by(private_key: params["id"])
+    pp lobby
+    if lobby.nil?
+      respond_with(403) do
+        json({errors: [{private_key: "Wrong private key"}]}.to_json)
+      end
+    else
+      respond_with do
+        json lobby.to_json
+      end
     end
   end
 
