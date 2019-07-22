@@ -9,7 +9,7 @@ class LobbyController < ApplicationController
     lobbies = get_lobbies(params)
     if lobbies.empty?
       respond_with do
-        json lobbies
+        json(lobbies.to_json)
       end
     end
 
