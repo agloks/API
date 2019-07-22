@@ -38,8 +38,17 @@ class LobbySessionController < ApplicationController
       else
         user.update lobby_id: lobby.id
         game = Game.find_by(lobby_id: lobby.id, running: true)
+        theme = Theme.find!(lobby.theme_id)
+        response = JSON.build do |json|
+          json.object do
+            json.field "lobby_id", lobby.id
+            json.field "name", theme.title
+            json.field "running", !game.nil?
+          end
+        end
+
         respond_with do
-          json({running: !game.nil?}.to_json)
+          json(response)
         end
       end
     else
