@@ -18,6 +18,7 @@ class LobbyController < ApplicationController
             json.field "restricted", lobby.restricted
             json.field "active", lobby.active
             json.field "questions", lobby.questions
+            json.field "media_duration", lobby.media_duration
             json.field "created_at", lobby.created_at
             json.field "updated_at", lobby.updated_at
             json.field "created_by", lobby.created_by
@@ -66,6 +67,7 @@ class LobbyController < ApplicationController
       required :theme_id
       required :questions
       required :restricted
+      optional :media_duration
     end
   end
 
