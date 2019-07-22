@@ -47,6 +47,7 @@ class ThemeController < ApplicationController
 
   def destroy
     theme.destroy
+    Lobby.where(theme_id: theme.id).select.each { |l| l.update(active: false) }
     respond_with(204) do
       json ""
     end

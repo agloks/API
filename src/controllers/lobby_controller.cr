@@ -110,6 +110,7 @@ class LobbyController < ApplicationController
     if params["score"]?
       query = "JOIN games ON lobbies.id = games.lobby_id \
         JOIN scores ON games.id = scores.game_id \
+        WHERE active = true \
         GROUP BY lobbies.id"
       Lobby.all(query)
     else
