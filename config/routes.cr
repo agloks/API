@@ -38,6 +38,7 @@ Amber::Server.configure do
     resources "/lobbies", LobbyController, except: [:new, :edit, :update]
     resources "/lobbies/:id/users", LobbySessionController, only: [:index]
     resources "/lobbies/:id/join", LobbySessionController, only: [:create]
+    post "/lobbies/join", LobbySessionController, :join_private
     resources "/lobbies/:id/messages", MessageController, only: [:index]
     resources "/lobbies/:id/game", GameController, only: [:create]
     resources "/lobbies/:id/scores", ScoreController, only: [:index]
