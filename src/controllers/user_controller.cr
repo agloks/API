@@ -31,6 +31,12 @@ class UserController < ApplicationController
   end
 
   def update
+    if params["status"]? == "deleted"
+      respond_with(403) do
+        json({errors: [{"status": "You can't delete this profil this way"}]}.to_json)
+      end
+    end
+
     user.set_attributes update_user_params.validate!
     result = user.save ? user.to_json : {errors: formatted_errors(user)}.to_json
     respond_with do
@@ -39,9 +45,12 @@ class UserController < ApplicationController
   end
 
   def destroy
-    user.destroy
+    user.update(email: "", nickname: "Profil supprimé", password: "", status: "deleted",
+      chat_socket: "", lobby_id: nil)
+    Message.where(user_id: user.id).delete
+
     respond_with(204) do
-      json ""
+      json user.to_json
     end
   end
 
