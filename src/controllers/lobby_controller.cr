@@ -7,6 +7,11 @@ class LobbyController < ApplicationController
 
   def index
     lobbies = get_lobbies(params)
+    if lobbies.empty?
+      respond_with do
+        json lobbies
+      end
+    end
 
     themes = Theme.where(id: lobbies.each_with_object([] of Int32) { |lobby, array| array.push lobby.theme_id! }).select
     string = JSON.build do |json|
