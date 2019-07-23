@@ -12,7 +12,7 @@ module Factory
       medias = ::Media.all("JOIN questions ON medias.id = questions.media_id \
         WHERE medias.theme_id = ? AND questions.answers <> ''", [theme.id])
       if medias.size < @params["questions"].not_nil!.to_i
-        return Monads::Left.new([{"questions" => "There are not enough questions for this theme : #{medias.size} available"}])
+        return Monads::Left.new([{"questions" => "Nombre de questions maximum possible pour ce thème : #{medias.size}"}])
       end
 
       lobby = ::Lobby.new(@params)
