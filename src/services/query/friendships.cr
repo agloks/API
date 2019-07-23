@@ -26,7 +26,7 @@ module Query
         data << {
           "user_id" => res.read(Int64 | Nil).to_s, "friendship_id" => res.read(Int64 | Nil).to_s,
           "nickname" => res.read(String | Nil), "status" => res.read(String | Nil),
-          "asked_by" => res.read(Int64 | Nil).to_s,
+          "asked_by" => res.read(Int32 | Nil).to_s,
         }
       end
 
