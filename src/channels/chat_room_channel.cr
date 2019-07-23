@@ -39,6 +39,8 @@ class ChatRoomChannel < Amber::WebSockets::Channel
     #   score = ""
     # end
 
+    sleep 3
+
     string = JSON.build do |json|
       json.object do
         json.field "event", "message"
