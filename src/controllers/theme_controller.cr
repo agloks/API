@@ -47,17 +47,10 @@ class ThemeController < ApplicationController
 
   def destroy
     lobbies = Lobby.where(theme_id: theme.id).select
-    running_games = Game.where(lobby_id: lobbies.map(&.id!), running: true).select
-    if running_games.empty?
-      lobbies.each { |l| l.update(active: false) }
-      theme.destroy
-      respond_with(204) do
-        json ""
-      end
-    else
-      respond_with(403) do
-        json({errors: [{"games": "A game is still running"}]}.to_json)
-      end
+    lobbies.each { |l| l.update(active: false) }
+    theme.destroy
+    respond_with(204) do
+      json ""
     end
   end
 
