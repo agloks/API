@@ -25,9 +25,9 @@ class ChatRoomChannel < Amber::WebSockets::Channel
 
     Message.create(content: answer, lobby_id: lobby_id, user_id: user.id)
 
+    question = Question.find payload["question_id"].to_s
     score = "game en cours: #{!running_game.nil?}, question_id: #{payload["question_id"]?}, question existe: #{!question.nil?}"
     # if !running_game.nil? && payload["question_id"]?
-    #   question = Question.find payload["question_id"].to_s
     #
     #   if !question.nil?
     #     score = JSON.parse(question.answers.not_nil!).as_a.map do |a|
