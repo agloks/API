@@ -52,7 +52,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
                 json.field "nickname", user.nickname
               end
             end
-            # json.field "score", score.to_s
+            json.field "score", ""
             json.field "content", answer
           end
         end
