@@ -4,33 +4,46 @@ class GameService
   @game : Game
 
   def initialize(@lobby : Lobby)
-    @ws = HTTP::WebSocket.new(URI.parse("ws://localhost:3000/game"))
+    @ws = HTTP::WebSocket.new(URI.parse("ws://#{ENV["DOMAIN"]}/game"))
     @topic = "game_room:lobby_#{@lobby.id}"
     @game = Game.new
   end
 
   def run
-    return if Game.find_by(lobby_id: @lobby.id, running: true)
+    if Game.find_by(lobby_id: @lobby.id, running: true)
+      return Monads::Left.new([{"game" => "A game is already running"}])
+    end
 
-    medias = Media.where(theme_id: @lobby.theme.id).select.shuffle[0...@lobby.questions]
-    @game = Game.create(running: true, lobby_id: @lobby.id)
+    medias = Media.all("JOIN questions ON medias.id = questions.media_id \
+      WHERE medias.theme_id = ? AND questions.answers <> ''", [@lobby.theme.id])
+    if medias.size < @lobby.questions.not_nil!
+      return Monads::Left.new([{"medias" => "Not enough questions for this lobby"}])
+    end
+
+    @game = game = Game.create(running: true, lobby_id: @lobby.id)
     add_players(all_players)
+    sleep 3
     send_new_game_message
 
-    medias.each_with_index do |media, index|
-      question = media.questions.shuffle[0]
-      add_players(missing_players)
-      send_new_round_message(media, question, index)
-      15.times do |time|
-        sleep 1
-        send_timer_message(time)
+    spawn do
+      medias.shuffle[0...@lobby.questions].each_with_index do |media, index|
+        question = media.questions.shuffle[0]
+        add_players(missing_players)
+        send_new_round_message(media, question, index)
+        15.times do |time|
+          sleep 1
+          send_timer_message(15 - time)
+        end
+        send_finish_round_message(question)
+        sleep 5
       end
-      send_finish_round_message(question)
+
+      game.update(running: false)
+      send_finish_game_message
       sleep 5
     end
 
-    @game.update(running: false)
-    send_finish_game_message
+    Monads::Right.new(@game)
   end
 
   private def send_new_round_message(media, question, index)
@@ -38,6 +51,7 @@ class GameService
       "game_id"     => @game.id,
       "turn"        => index + 1,
       "media_id"    => media.id,
+      "kind"        => media.kind,
       "question_id" => question.id,
       "file_url"    => media.file_url,
       "question"    => question.content,
@@ -46,7 +60,7 @@ class GameService
   end
 
   private def send_timer_message(time)
-    GameSocket.broadcast("message", @topic, "timer:increment", {"time" => time})
+    GameSocket.broadcast("message", @topic, "timer:decrement", {"time" => time})
   end
 
   private def send_finish_round_message(question)
@@ -56,6 +70,7 @@ class GameService
       "question"    => question.content,
       "answers"     => question.answers,
       "score"       => round_score(question),
+      "total"       => game_score,
     }
     GameSocket.broadcast("message", @topic, "round:finish", payload)
   end
@@ -70,14 +85,19 @@ class GameService
   end
 
   private def round_score(question)
-    Score.where(question_id: question.id, game_id: @game.id).select.each_with_object({} of Int64 => Int32) do |score, hash|
-      hash[score.user.id.not_nil!] = score.points.not_nil!
+    Score.where(question_id: question.id, game_id: @game.id).select.each_with_object({} of String => Int32) do |score, hash|
+      hash[score.user.nickname.not_nil!] = score.points.not_nil!
     end
   end
 
   private def game_score
-    Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
-      .map { |id, scores| {id => scores.sum { |s| s.points || 0 }} }[0]
+    users = User.all("JOIN games_users ON games_users.user_id = users.id").each_with_object({} of Int64 => String) do |u, hash|
+      hash[u.id!] = u.nickname!
+    end
+
+    scores = Score.where(game_id: @game.id).select.group_by { |score| score.user_id }
+      .map { |id, scores| {users[id] => scores.sum { |s| s.points || 0 }} }
+    scores.empty? ? Hash(String, String).new : scores[0]
   end
 
   private def add_players(users)

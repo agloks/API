@@ -6,9 +6,9 @@ class ThemeController < ApplicationController
   end
 
   def index
-    themes = Theme.all
+    current_user = User.find(session["current_user_id"])
     respond_with do
-      json themes.to_json
+      json get_themes(current_user.not_nil!, params["public"]?).to_json
     end
   end
 
@@ -46,9 +46,18 @@ class ThemeController < ApplicationController
   end
 
   def destroy
-    theme.destroy
-    respond_with(204) do
-      json ""
+    lobbies = Lobby.where(theme_id: theme.id).select
+    running_games = Game.where(lobby_id: lobbies.map(&.id!), running: true).select
+    if running_games.empty?
+      lobbies.each { |l| l.update(active: false) }
+      theme.destroy
+      respond_with(204) do
+        json ""
+      end
+    else
+      respond_with(403) do
+        json({errors: [{"games": "A game is still running"}]}.to_json)
+      end
     end
   end
 
@@ -61,5 +70,9 @@ class ThemeController < ApplicationController
 
   private def set_theme
     @theme = Theme.find! params[:id]
+  end
+
+  private def get_themes(user, public?)
+    user.admin? || public? ? Theme.all : Theme.where(user_id: user.id).select
   end
 end

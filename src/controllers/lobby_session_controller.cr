@@ -15,14 +15,15 @@ class LobbySessionController < ApplicationController
   end
 
   def create
-    if lobby.restricted && (!params["private_key"]? || params["private_key"] != lobby.private_key)
+    if lobby.restricted
       respond_with(403) do
-        json({errors: {private_key: "Wrong private key"}}.to_json)
+        json({errors: {restricted: "This lobby is restricted"}}.to_json)
       end
     else
       user.update lobby_id: lobby.id
+      game = Game.find_by(lobby_id: lobby.id, running: true)
       respond_with do
-        json(user.to_json)
+        json({running: !game.nil?}.to_json)
       end
     end
   end

@@ -11,10 +11,22 @@ class ScoreController < ApplicationController
       WHERE games.lobby_id = ?"
     query += " AND games.created_at >= now()::date" if params["daily"]?
     scores = Score.all(query, [params["id"]]).group_by { |score| score.user_id }
-      .map { |id, scores| {users[id] => scores.sum { |s| s.points || 0 }} }[0]
+    unless scores[current_user_id]?
+      scores[current_user_id] = [Score.new(points: 0)]
+      user = User.find(current_user_id).not_nil!
+      users[session["current_user_id"].not_nil!.to_i64] = user.nickname! unless users[current_user_id]?
+    end
+
+    response = scores.map do |id, scores|
+      {"score" => scores.sum { |s| s.points || 0 }, "nickname" => users[id], "id" => id}
+    end.sort { |a, b| b["score"].as(Int32) <=> a["score"].as(Int32) }
 
     respond_with do
-      json scores.to_json
+      json response.to_json
     end
+  end
+
+  private def current_user_id
+    session["current_user_id"].not_nil!.to_i
   end
 end

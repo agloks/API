@@ -35,4 +35,8 @@ class User < Granite::Base
     @rank = "user" if rank == nil
     @status = "online" if status == nil
   end
+
+  def admin?
+    rank == "admin"
+  end
 end

@@ -3,11 +3,14 @@ require "awscr-s3"
 module BucketService
   class FileUploader
     FILE_PREFIX = {
-      "image/png"  => "picture",
-      "image/jpeg" => "picture",
-      "video/mp4"  => "video",
-      "video/mpeg" => "video",
-      "audio/mpeg" => "music",
+      "image/png"   => "picture",
+      "image/jpeg"  => "picture",
+      "video/mp4"   => "video",
+      "video/mpeg"  => "video",
+      "audio/mpeg"  => "music",
+      "audio/mp3"   => "music",
+      "audio/wav"   => "music",
+      "audio/x-wav" => "music",
     }
 
     def initialize(@file : File, @filename : String, @metadata : Hash(String, String))
@@ -16,9 +19,10 @@ module BucketService
     end
 
     def upload
+      pp @metadata["Content-Type"]
       return Monads::Left.new([{"file" => "Unhandled type file"}]) unless file_type
 
-      @uploaded_at = Time.now.to_s("%F-%k-%M-%S")
+      @uploaded_at = Time.now.to_s("%F-%H-%M-%S")
       @client.put_object(ENV["AWS_BUCKET"], bucket_filename, @file, @metadata)
 
       Monads::Right.new({file_url, file_type.not_nil!})
