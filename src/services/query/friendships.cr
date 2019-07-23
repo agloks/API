@@ -26,6 +26,7 @@ module Query
         data << {
           "user_id" => res.read(Int64 | Nil).to_s, "friendship_id" => res.read(Int64 | Nil).to_s,
           "nickname" => res.read(String | Nil), "status" => res.read(String | Nil),
+          "asked_by" => res.read(Int64 | Nil).to_s,
         }
       end
 
@@ -37,8 +38,7 @@ module Query
     end
 
     private def select_query
-      "SELECT users.id, friendships.id, users.nickname, friendships.status, \
-        friendships.created_at, friendships.updated_at \
+      "SELECT users.id, friendships.id, users.nickname, friendships.status, friendships.asked_by \
         FROM friendships \
         LEFT JOIN users \
         ON (friendships.asked_to = users.id OR friendships.asked_by = users.id) \
