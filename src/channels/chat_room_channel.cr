@@ -25,19 +25,16 @@ class ChatRoomChannel < Amber::WebSockets::Channel
 
     Message.create(content: answer, lobby_id: lobby_id, user_id: user.id)
 
-    # if !running_game.nil? && payload["question_id"]?
-    #   question = Question.find payload["question_id"].to_s
-    #
-    #   if !question.nil?
-    #     score = JSON.parse(question.answers.not_nil!).as_a.map do |a|
-    #       points = 200 - 200 / a.as_s.size * Levenshtein.distance(a.as_s, answer)
-    #       points.positive? ? points : 0
-    #     end.max
-    #     store_score(user.id, question.id, running_game.id, score)
-    #   end
-    # else
-    #   score = ""
-    # end
+    if !running_game.nil? && payload["question_id"]?
+      question = Question.find payload["question_id"].to_s
+
+      if !question.nil?
+        score = 25
+        store_score(user.id, question.id, running_game.id, score)
+      end
+    else
+      score = ""
+    end
 
     sleep 3
 
