@@ -22,7 +22,6 @@ class ChatRoomChannel < Amber::WebSockets::Channel
     lobby_id = message["topic"].to_s.split(":lobby_")[1]
     answer = payload["content"].to_s
     running_game = Game.find_by(lobby_id: lobby_id, running: true)
-    scores = [0]
 
     Message.create(content: answer, lobby_id: lobby_id, user_id: user.id)
 
@@ -36,6 +35,8 @@ class ChatRoomChannel < Amber::WebSockets::Channel
         end.max
         store_score(user.id, question.id, running_game.id, score)
       end
+    else
+      score = ""
     end
 
     string = JSON.build do |json|

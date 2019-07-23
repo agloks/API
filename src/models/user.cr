@@ -16,15 +16,15 @@ class User < Granite::Base
   before_create :default_values
 
   validate(:email, "Email already in use", ->(user : self) {
-    Validation::Uniqueness.new(user, "email").valid?
+    Validation::Uniqueness.new(user, "email", [""]).valid?
   })
 
   validate(:nickname, "Nickname already in use", ->(user : self) {
-    Validation::Uniqueness.new(user, "nickname").valid?
+    Validation::Uniqueness.new(user, "nickname", ["Ancien joueur"]).valid?
   })
 
   validate(:status, "Status should be either 'online', 'offline' or 'afk'", ->(user : self) {
-    (user.new_record? && user.status == nil) || %w(online offline afk).includes? user.status
+    (user.new_record? && user.status == nil) || %w(online offline afk deleted).includes? user.status
   })
 
   validate(:rank, "Rank should be either 'user' or 'admin'", ->(user : self) {
