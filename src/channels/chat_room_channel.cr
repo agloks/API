@@ -29,7 +29,7 @@ class ChatRoomChannel < Amber::WebSockets::Channel
     if !running_game.nil? && payload["question_id"]?
       question = Question.find payload["question_id"].to_s
 
-      if question
+      if !question.nil?
         score = JSON.parse(question.answers.not_nil!).as_a.map do |a|
           points = 200 - 200 / a.as_s.size * Levenshtein.distance(a.as_s, answer)
           points.positive? ? points : 0
