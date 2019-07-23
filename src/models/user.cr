@@ -20,7 +20,7 @@ class User < Granite::Base
   })
 
   validate(:nickname, "Nickname already in use", ->(user : self) {
-    Validation::Uniqueness.new(user, "nickname", ["Ancien joueur"]).valid?
+    Validation::Uniqueness.new(user, "nickname", ["Profil supprimé"]).valid?
   })
 
   validate(:status, "Status should be either 'online', 'offline' or 'afk'", ->(user : self) {
